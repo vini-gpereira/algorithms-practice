@@ -1,7 +1,7 @@
 .vscode
 
-cpp/*
-!cpp/*.cpp
+cpp/*/*
+!cpp/*/*.cpp
 
 go/*/go.mod
 go/*/go.sum
