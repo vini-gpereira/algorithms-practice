@@ -5,3 +5,5 @@ cpp/*
 
 go/*/go.mod
 go/*/go.sum
+
+java/*/*.class
