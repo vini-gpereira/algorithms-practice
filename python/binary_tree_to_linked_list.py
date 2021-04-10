@@ -1,3 +1,5 @@
+import time
+
 class BinaryTree:
     def __init__(self):
         self.root = None
@@ -11,6 +13,9 @@ class BinaryTree:
     def inserValues(self, values):
         for value in values:
             self.insert(value)
+
+    def printTree(self):
+        self.root.printTree()
 
 class BinaryTreeNode:
     def __init__(self, value):
@@ -39,54 +44,50 @@ class BinaryTreeNode:
         if self.right:
             self.right.printTree()
 
-class LinkedList:
-    def __init__(self):
-        self.first = None
-
-    def insert(self, value):
-        newNode = LinkedListNode(value)
-        if self.first is None:
-            self.first = newNode
-        else:
-            newNode.next = self.first
-            self.first.previous = newNode
-            self.first = newNode
-
-    def insertValues(self, values):
-        for value in values:
-            self.insert(value)
-
-    def printLinkedList(self):
-        node = self.first
-        while node is not None:
-            print(node.value, "->", end=" ")
-            node = node.next
-        print()
-
-class LinkedListNode:
-    def __init__(self, value):
-        self.next = None
-        self.previous = None
-        self.value = value
-
 def convert_to_linked_list(binaryTree):
-    linkedList = LinkedList()
-    return rec_convert_to_linked_list(binaryTree.root, linkedList)
+    return _convert_to_linked_list(binaryTree.root)
+
+def _convert_to_linked_list(node):
+    if node is not None:
+        leftSubtree = _convert_to_linked_list(node.left)
+        rightSubtree = _convert_to_linked_list(node.right)
+        node.left = node.right = node
+        node = concatenate_list(leftSubtree, node)
+        node = concatenate_list(node, rightSubtree)
+
+    return node
+
+def concatenate_list(head1, head2):
+    if head1 is None:
+        return head2
     
-def rec_convert_to_linked_list(node, linkedList):
-    if node is None:
-        return linkedList
-    
-    linkedList = rec_convert_to_linked_list(node.right, linkedList)
+    if head2 is None:
+        return head1
 
-    linkedList.insert(node.value)
+    tail1 = head1.left
+    tail2 = head2.left
 
-    linkedList = rec_convert_to_linked_list(node.left, linkedList)
+    tail1.right = head2
+    head2.left = tail1
 
-    return linkedList
+    tail2.right = head1
+    head1.left = tail2
+
+    return head1
+
 
 if __name__ == "__main__":
     binaryTree = BinaryTree()
     binaryTree.inserValues([10, 3, 20, 7, 1, 15, 25])
-    linkedList = convert_to_linked_list(binaryTree)
-    linkedList.printLinkedList()
+    binaryTree.printTree()
+    binaryTree.root = convert_to_linked_list(binaryTree)
+    current = binaryTree.root
+
+    while True:
+        print(current.value, "<->", end=" ")
+        current = current.right
+        if current == binaryTree.root:
+            break
+    
+    print()
+
