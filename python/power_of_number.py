@@ -5,17 +5,12 @@ def power(x, n):
 def _power(x, n, powers):
     if n == 1:
         return x
-    
-    if n in powers:
-        return powers[n]
 
     half = _power(x, n // 2, powers)
     result = half * half
 
     if n % 2 == 1:
         result *= x
-
-    powers[n] = result
 
     return result
     
