@@ -1,35 +1,29 @@
-def binary_search_rotated(arr, key):
-    n = len(arr)
-    lowestIdx = find_lowest_number_idx(arr, 0, n, None)
-    return _binary_search_rotated(arr, n, key, lowestIdx, lowestIdx + n)
+def search(A, B):
+        n = len(A)
+        return _search(A, B, 0, n - 1)
 
-def find_lowest_number_idx(arr, start, end, lowestIdx):
-    mid = (start + end) // 2
-
-    if start < end:
-        if lowestIdx is None or arr[lowestIdx] > arr[mid]:
-            return find_lowest_number_idx(arr, start, mid, mid)
-        else:
-            return find_lowest_number_idx(arr, mid + 1, end, lowestIdx)
-
-    return lowestIdx
-
-def _binary_search_rotated(arr, n, key, start, end):
-    if start >= end:
+def _search(A, B, l, r):
+    if l > r:
         return -1
 
-    mid = (start + end) // 2
-    midMod = mid % n
-    
-    if arr[midMod] > key:
-        return _binary_search_rotated(arr, n, key, start, mid)
-    elif arr[midMod] < key:
-        return _binary_search_rotated(arr, n, key, mid + 1, end)
+    m = (l + r) // 2
 
-    return midMod
+    if A[m] == B:
+        return m
+
+    if A[m] > A[l]:
+        if A[l] <= B < A[m]:
+            return _search(A, B, l, m - 1)
+        else:
+            return _search(A, B, m + 1, r)
+
+    if A[m] < B <= A[r]:
+        return _search(A, B, m + 1, r)
+
+    return _search(A, B, l, m - 1)
 
 
 if __name__ == "__main__":
     arr = [180, 200, 220, 0, 20, 30, 40]
-    number = 10
-    print(binary_search_rotated(arr, number))
+    number = 200
+    print(search(arr, number))
