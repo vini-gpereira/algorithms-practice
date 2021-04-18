@@ -1,34 +1,39 @@
 def closestSumInArrays(a, b, target):
-    n = len(a)
-    m = len(b)
-    dp = [[0 for _ in range(m)] for _ in range(n)]
+    a.sort() # O(nlogn)
+    b.sort() # O(nlogn)
 
-    for i in range(n):
-        for j in range(m):
-            current = [a[i], b[j]]
-            up = dp[i - 1][j] if i > 0 else None
-            left = dp[i][j - 1] if j > 0 else None
-            
-            upDistance = getDistanceToTarget(target, up)
-            leftDistance = getDistanceToTarget(target, left)
-            currentDistance = getDistanceToTarget(target, current)
+    i = 0
+    j = len(b) - 1
 
-            minDistance = min(currentDistance, upDistance, leftDistance)
+    closest = [a[i], b[j]]
+    closestDistance = getDistanceToTarget(target, closest)
 
-            if minDistance == currentDistance:
-                dp[i][j] = current
-            elif minDistance == upDistance:
-                dp[i][j] = up
-            else:
-                dp[i][j] = left
+    # O(n)
+    while i < len(a) and j > 0:
+        currentSum = a[i] + b[j]
 
-    return dp[n - 1][m - 1]
+        if currentSum == target:
+            return [a[i], b[j]]
 
-def getDistanceToTarget(target, indexes):
-    if indexes is None:
+        if currentSum < target:
+            i += 1
+        
+        if currentSum > target:
+            j -= 1
+
+        currentDistance = abs(target - currentSum)
+
+        if currentDistance < closestDistance:
+            closestDistance = currentDistance
+            closest = [a[i], b[j]]
+
+    return closest
+
+def getDistanceToTarget(target, values):
+    if values is None:
         return float('inf')
 
-    x, y = indexes
+    x, y = values
     return abs(target - x - y)
 
 if __name__ == "__main__":
